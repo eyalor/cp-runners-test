@@ -1,0 +1,179 @@
+<!--
+You are free to copy and use this sample in accordance with the terms of the
+Apache license (http://www.apache.org/licenses/LICENSE-2.0.html)
+-->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title>
+      סטטיסטיקה
+    </title>
+	<link href="./css/calendar.css" rel="stylesheet" type="text/css">
+	<script src="./js/jquery.min.js" type="text/javascript"></script>
+	<script src="./js/functions.js" type="text/javascript"></script>
+	<script src="./js/jquery-ui.min.js" type="text/javascript"></script>
+	<script src="./js/calendar.js" language="javascript"></script>
+    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load('visualization', '1', {packages: ['corechart']});
+	  google.load('visualization', '1.1', {packages: ['controls']});
+    </script>
+    <script type="text/javascript">
+
+function drawVisualization1(){
+	//var today = new Date();
+	//var dd = today.getDate();
+	//var mm = today.getMonth()+1; //January is 0!
+
+	//var yyyy = today.getFullYear();
+	//if(dd<10){dd='0'+dd} if(mm<10){mm='0'+mm} var today = yyyy+'-'+mm+'-'+dd;
+	//document.getElementById('weekly_date').value = today;
+	if (document.getElementById('weekly_date').value == "")
+		document.getElementById('weekly_date').value = '2012-01-12';
+	var weekly_date = document.getElementById('weekly_date').value;
+	var jsonData = null;
+	
+	var jsonDataResult = $.ajax({
+		url: './php/current_week.php',
+		dataType: "json",
+		data : {
+			weekly_date : weekly_date
+		},
+		async: false,
+		success: (
+			function(data) {
+				jsonData = data;
+			})
+	});
+
+		//alert (jsonData);
+	var data = new google.visualization.arrayToDataTable(jsonData, false);	
+
+	new google.visualization.ColumnChart(document.getElementById('visualization1')).
+		draw(data,
+			 {title:"קילומטרז' שבועי לתאריך",
+			  width:1000, height:400,
+			  //hAxis: {title: "שם הרץ"},
+ 			  hAxis: {textStyle: {fontSize: 10}, showTextEvery: 1, slantedTextAngle:90,direction:-1,slantedText:true},
+			  vAxis: {title: "'קילומטרז", minValue: 0},
+			  seriesType: "bars",
+			  //series: {1: {type: "line"}}
+			 }
+			  
+		);
+}
+	
+function processData(){
+	var start_date = document.getElementById('start_date').value;
+	var end_date = document.getElementById('end_date').value;
+    var runner_id = document.getElementById('runner').value;
+
+	var jsonData = null;
+	
+	var jsonDataResult = $.ajax({
+		url: './php/getdata.php',
+		dataType: "json",
+		data : {
+			runner_id : runner_id,
+			start_date : start_date,
+			end_date : end_date
+
+		},
+		async: false,
+		success: (
+			function(data) {
+				jsonData = data;
+			})
+	});
+
+		//alert (jsonData);
+	var data = new google.visualization.arrayToDataTable(jsonData, false);	
+    /*  
+	jsonData = ([
+          ['Year', 'Austria', 'Belgium', 'Czech Republic', 'Finland', 'France', 'Germany'],
+          ['2003',  1336060,   3817614,       974066,       1104797,   6651824,  15727003],
+          ['2004',  1538156,   3968305,       928875,       1151983,   5940129,  17356071],
+          ['2005',  1576579,   4063225,       1063414,      1156441,   5714009,  16716049],
+          ['2006',  1600652,   4604684,       940478,       1167979,   6190532,  18542843],
+          ['2007',  1968113,   4013653,       1037079,      1207029,   6420270,  19564053],
+          ['2008',  1901067,   6792087,       1037327,      1284795,   6240921,  19830493]
+        ]);
+		{"j":"350","f":"423","m":"333","a":"285","z":"311"};
+      // Create our data table out of JSON data loaded from server.
+    */  
+
+		
+	// Create and draw the visualization.
+	new google.visualization.ComboChart(document.getElementById('visualization')).
+		draw(data,
+			 {title:"חתך קילומטרז' על פי שבועות",
+			  width:1000, height:400,
+			  hAxis: {title: "-שבוע המסתיים ב"},
+			  vAxis: {title: "'קילומטרז", minValue: 0},
+			  seriesType: "bars",
+			  series: {1: {type: "line"}}
+			 }
+			  
+		);
+		
+}	  
+
+google.setOnLoadCallback(drawVisualization1);
+    </script>
+  </head>
+
+  <body style="font-family: Arial;border: 0 none;">
+  
+	<div align="center" dir="rtl">
+		<span>תאריך לקילומטרז' שבועי</span>
+		<input size="8" name='weekly_date' id='weekly_date' class='inputBoxStyle' readonly>
+		<img src='./images/cal.gif' align='absmiddle' onmouseover="fnInitCalendar(this, 'weekly_date', 'close=true')">
+
+		
+		
+		
+		<!--<input align="center" size="15" id="weekly_date" name="weekly_date"
+		   onfocus="showCalendarControl(this);"
+		   type="text">-->
+	<input type='submit' value='הצג גרף' onclick="drawVisualization1();" >
+	</div>
+	<div align="center" id="visualization1" style="width: 1000px; height: 400px;"></div>
+	<hr>
+	<div></div>
+	<center>
+	<div dir="rtl">
+	<select name='runner' id='runner'>
+		<option value='0' selected>בחר רץ</option>
+		<option value='113'>יוסי</option>
+		<option value='122'>יורם</option>
+		<option value='124'>אתי</option>
+		<option value='126'>גיסר</option>
+		<option value='178'>אבישי</option>
+		<option value='203'>גבי</option>
+		<option value='206'>איתי</option>
+	<!--	<option value='230'>אמיר</option>	
+		<option value='10'>יוסי</option>
+		<option value='12'>יורם</option>
+		<option value='13'>אתי</option>-->
+	</select>
+	</div><br>
+	<div dir="rtl">
+		<span>תאריך התחלה:</span>
+		<input name='start_date' size="8" id='start_date' class='inputBoxStyle' readonly>
+		<img src='./images/cal.gif' align='absmiddle' onmouseover="fnInitCalendar(this, 'start_date', 'close=true')">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<span>תאריך סיום :</span>
+		<input name='end_date' size="8" id='end_date' class='inputBoxStyle' readonly>
+		<img src='./images/cal.gif' align='absmiddle' onmouseover="fnInitCalendar(this, 'end_date', 'close=true')" >
+	</div>
+
+	<br>
+	<input type='submit' value='הצג גרף' onclick="processData();" >
+	</center>
+
+    <div id="visualization" style="width: 600px; height: 400px;"></div>
+
+  </body>
+</html>

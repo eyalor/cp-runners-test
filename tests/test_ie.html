@@ -1,0 +1,168 @@
+<html>
+<head>
+
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+<script src="../js/functions.js"></script type='text/javascript'></script>
+
+<script type='text/javascript'>
+
+function validate1() {
+	var ok = Time.validateHMMSS(document.getElementById('time_hmmss').value);
+	document.getElementById('time_hmmss_result').innerHTML = ok ? ":-)" : ":-(";	
+}
+
+function validate2() {
+	var ok = Time.validateMMSS(document.getElementById('time_mmss').value);
+	document.getElementById('time_mmss_result').innerHTML = ok ? ":-)" : ":-(";	
+}
+
+function validate3() {
+	var result = Time.convertSecondsToMMSS(document.getElementById('time_convert_mmss').value);
+	document.getElementById('time_convert_mmss_result').innerHTML = result == null ? "null" : result;
+}
+
+function validate4() {
+	var result =  Time.convertSecondsToHMMSS(document.getElementById('time_convert_hmmss').value);
+	document.getElementById('time_convert_hmmss_result').innerHTML = result == null ? "null" : result;
+}
+function validate5() {
+	var result =  Time.convertHMMSSToSeconds(document.getElementById('time_hmmss').value);
+	document.getElementById('time_hmmss_result').innerHTML = result == null ? "null" : result;	
+}
+
+function validate6() {
+	var result =  Time.convertMMSSToSeconds(document.getElementById('time_mmss').value);
+	document.getElementById('time_mmss_result').innerHTML = result == null ? "null" : result;	
+}
+
+function validate7() {
+	var ok = Time.validateDistance(document.getElementById('distance').value);
+	document.getElementById('distance_result').innerHTML = ok ? ":-)" : ":-(";	
+}
+
+function validate8() {
+	var distance = document.getElementById('distance').value;
+	var validDistance = Time.validateDistance(distance);
+	if(!validDistance) {
+		document.getElementById('pace_result').innerHTML = ":-(";	
+		return;
+	}
+	var timeMMSS = document.getElementById('time_mmss').value;
+	var timeSec = Time.convertMMSSToSeconds(timeMMSS);
+	if(timeSec == null) {
+		document.getElementById('pace_result').innerHTML = ":-(";	
+		return;
+	}
+	var result = Time.calculatePace(parseFloat(distance), timeSec)
+	document.getElementById('pace_result').innerHTML = result == null ? "null" : result + "(min/km)";	
+
+}
+
+function validate9() {
+	var data = document.getElementById('data');
+	if(data == null) {
+		return;
+	}
+	var dataAsJSONArray = eval(data.value);
+	SelectUtils.populateSelect('my_select',dataAsJSONArray);
+}
+
+function validate10() {
+	SelectUtils.clearSelect('my_select');
+}
+function validate11(value) {
+	SelectUtils.makeSelection('my_select',value);
+}
+
+function validate12() {
+	var value = SelectUtils.getSelectedValue('my_select');
+	document.getElementById('selected_value').innerHTML = value == null ? "null" : "Selected value is: " + value;	
+
+}
+
+
+
+
+
+
+</script>
+
+</head>
+<body>
+
+<h1>Time conversion and validation - Testing page</h1>
+
+<label for="time_hmmss">h:mm:ss Field</label>
+<input id="time_hmmss"></input>
+<button onclick="validate1();">Validate h:mm:ss</button> 
+<button onclick="validate5();">Convert to seconds</button> 
+
+<span id="time_hmmss_result"></span>
+
+</br>
+</br>
+
+<label for="time_mmss">mm:ss Field</label>
+<input style="background-color:yellow;" id="time_mmss"></input>
+<button onclick="validate2();">Validate mm:ss</button> 
+<button onclick="validate6();">Convert to seconds</button> 
+
+<span id="time_mmss_result"></span>
+
+
+</br>
+</br>
+
+<label for="time_convert_mmss">Field with seconds</label>
+<input id="time_convert_mmss"></input>
+<button onclick="validate3();">Convert to mm:ss</button> 
+<span id="time_convert_mmss_result"></span>
+
+
+</br>
+</br>
+
+<label for="time_convert_hmmss">Field with seconds</label>
+<input  id="time_convert_hmmss"></input>
+<button  onclick="validate4();">Convert to h:mm:ss</button> 
+<span id="time_convert_hmmss_result"></span>
+
+</br>
+</br>
+
+<label for="distance">Field with Distance [0 - 99.9]</label>
+<input style="background-color:yellow;" id="distance"></input>
+<button onclick="validate7();">Validate distance in range</button> 
+<span id="distance_result"></span>
+
+</br>
+</br>
+
+<button onclick="validate8();">Calculate pace based on yellow fields</button> 
+<span id="pace_result"></span>
+
+</br>
+</br>
+
+<fieldset>
+<legend>SelectUtils:</legend>
+
+<button onclick="validate9();">Populate the gray &lt;select&gt; with gray JSON</button> 
+<button onclick="validate10();">Clear the gray select values</button> 
+<button onclick="validate11('19');">Make 'Hello' Selected (using the value 19)</button> 
+<button onclick="validate12();">Get Selected</button> 
+
+
+<textarea id="data" style="background-color:#A8A8A8;" rows="4" cols="60">
+[{"value":"81","label":"\u05d0\u05d1\u05d9\u05d7\u05d9 \u05d2\u05d5\u05d3\u05de\u05df"},{"value":"178","label":"\u05d0\u05d1\u05d9\u05e9\u05d9 \u05d1\u05dc\u05d3\u05e8\u05de\u05df"},{"value":"222","label":"\u05d0\u05d1\u05e8\u05d5\u05dd \u05d1\u05d5\u05e8\u05d2"},{"value":"204","label":"\u05d0\u05d5\u05e8\u05d9\u05ea \u05e9\u05de\u05e9"},{"value":"224","label":"\u05d0\u05d9\u05dc\u05d5\u05df \u05d9\u05e7\u05d5\u05ea\u05d9\u05d0\u05dc"},{"value":"206","label":"\u05d0\u05d9\u05ea\u05d9 \u05e8\u05d6"},{"value":"230","label":"\u05d0\u05de\u05d9\u05e8 \u05d2\u05dc\u05de\u05df"},{"value":"150","label":"\u05d0\u05de\u05d9\u05ea\u05d9 \u05d0\u05d1\u05e8\u05de\u05e1\u05d5\u05df"},{"value":"126","label":"\u05d0\u05de\u05d9\u05ea\u05d9 \u05d2\u05d9\u05e1\u05e8"},{"value":"209","label":"\u05d0\u05de\u05d9\u05ea\u05d9 \u05dc\u05d5\u05e8\u05d1\u05e8"},{"value":"159","label":"\u05d0\u05e8\u05d6 \u05e0\u05d5\u05d8\u05d4"},{"value":"124","label":"\u05d0\u05ea\u05d9 \u05d0\u05d9\u05d9\u05e0\u05e8"},{"value":"180","label":"\u05d1\u05e8\u05d5\u05da \u05d3\u05e0\u05d9\u05d0\u05dc\u05d9"},{"value":"203","label":"\u05d2\u05d1\u05d9 \u05de\u05e8\u05e7\u05d5\u05e1"},{"value":"237","label":"\u05d2\u05d9\u05dc \u05d3\u05d5\u05d9\u05d3\u05d5\u05d1\u05d9\u05e5"},{"value":"241","label":"\u05d2\u05d9\u05dc \u05db\u05d4\u05df"},{"value":"200","label":"\u05d4\u05d9\u05d9\u05d3\u05d9 \u05d9\u05ea\u05d5\u05dd"},{"value":"49","label":"\u05d7\u05d2\u05d9 \u05d1\u05e8\u05d2\u05de\u05df"},{"value":"23","label":"\u05d7\u05d9\u05d9\u05dd \u05d6\u05e8\u05d2\u05e8\u05d9"},{"value":"213","label":"\u05d7\u05df \u05e4\u05e8\u05e0\u05e7\u05dc"},{"value":"205","label":"\u05d9\u05d4\u05d5\u05d3\u05d9\u05ea \u05e4\u05e8\u05e0\u05e7\u05dc"},{"value":"214","label":"\u05d9\u05d5\u05d1\u05dc \u05d0\u05e1\u05d9\u05e3"},{"value":"215","label":"\u05d9\u05d5\u05d1\u05dc \u05d7\u05e5"},{"value":"242","label":"\u05d9\u05d5\u05e0\u05d9 \u05e7\u05e9\u05ea"},{"value":"113","label":"\u05d9\u05d5\u05e1\u05d9 \u05e9\u05d5\u05d5\u05e8\u05e6\u05e4\u05d5\u05e7\u05e1"},{"value":"234","label":"\u05d9\u05d5\u05e1\u05d9 \u05e9\u05d5\u05d9\u05de\u05e8"},{"value":"122","label":"\u05d9\u05d5\u05e8\u05dd \u05d0\u05d9\u05d9\u05e0\u05e8"},{"value":"194","label":"\u05d9\u05e2\u05e7\u05d1 \u05d4\u05e8\u05e9\u05e7\u05d5\u05d1\u05d9\u05e5"},{"value":"238","label":"\u05d9\u05e8\u05d9\u05d1 \u05ea\u05de\u05e0\u05e2"},{"value":"197","label":"\u05dc\u05d9\u05d0\u05ea \u05d2\u05dc\u05e8"},{"value":"218","label":"\u05de\u05d0\u05d9\u05d4 \u05d9\u05e4\u05e2\u05ea"},{"value":"207","label":"\u05de\u05d9\u05e8\u05d1 \u05e8\u05d5\u05d6\u05e0\u05e9\u05d8\u05d9\u05d9\u05df"},{"value":"154","label":"\u05de\u05e9\u05d4 \u05d2\u05e8\u05d5\u05dc\u05de\u05df"},{"value":"169","label":"\u05de\u05e9\u05d4 \u05dc\u05d5\u05d9\u05df"},{"value":"85","label":"\u05e0\u05d9\u05e8 \u05d0\u05d9\u05dc\u05df"},{"value":"236","label":"\u05e0\u05ea\u05df \u05dc\u05d9\u05e4\u05e9\u05e1"},{"value":"216","label":"\u05e1\u05d9\u05d5\u05df \u05d5\u05d9\u05d9\u05e0\u05e8\u05d9\u05d9\u05da"},{"value":"186","label":"\u05e1\u05d9\u05e8\u05d9\u05dc \u05d0\u05d5\u05dc\u05de\u05df"},{"value":"148","label":"\u05e2\u05de\u05d9\u05ea \u05d2\u05dc"},{"value":"167","label":"\u05e2\u05e7\u05d9\u05d1\u05d0 \u05d9\u05e2\u05e7\u05d5\u05d1\u05e1\u05d5\u05df"},{"value":"175","label":"\u05e2\u05e8\u05df \u05d2\u05d9\u05d0"},{"value":"185","label":"\u05e2\u05e8\u05df \u05d6\u05dc\u05e8"},{"value":"240","label":"\u05e6\u05d9\u05d5\u05df \u05d5\u05d9\u05d3\u05d0\u05dc"},{"value":"219","label":"\u05e7\u05d5\u05d1\u05d9 \u05e8\u05d5\u05d8\u05e8"},{"value":"233","label":"\u05e8\u05d5\u05d9\u05d8\u05dc \u05d1\u05e8\u05d2\u05de\u05df"},{"value":"235","label":"\u05e8\u05d5\u05e2\u05d9 \u05d1\u05e8\u05de\u05df"},{"value":"129","label":"\u05e8\u05d5\u05e2\u05d9 \u05dc\u05d5\u05dc\u05d1"},{"value":"153","label":"\u05e8\u05d5\u05ea\u05d9 \u05d6\u05d9\u05e0\u05d3\u05dc"},{"value":"162","label":"\u05e8\u05e4\u05d9 \u05d0\u05d9\u05d9\u05dc\u05d5\u05df"},{"value":"232","label":"\u05e9\u05d9 \u05e8\u05d3\u05d5\u05e9\u05d9\u05e6\u05e7\u05d9"},{"value":"228","label":"\u05e9\u05d9\u05e8\u05d9 \u05d3\u05d5\u05e8\u05d5\u05ea"},{"value":"210","label":"\u05e9\u05dc\u05d5\u05de\u05d9 \u05e4\u05d9\u05e0\u05e7\u05d9\u05df"}]
+</textarea>
+<select  id="my_select" style="background-color:#A8A8A8;"></select>
+<span id="selected_value"></span>
+
+</fieldset>
+
+
+
+</body>
+</html>

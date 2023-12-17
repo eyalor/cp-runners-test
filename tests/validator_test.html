@@ -1,0 +1,168 @@
+<html>
+<head>
+
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+<script src="../js/functions.js"></script type='text/javascript'></script>
+
+<script type='text/javascript'>
+
+function validate1() {
+	var ok = Time.validateHMMSS(document.getElementById('time_hmmss').value);
+	document.getElementById('time_hmmss_result').innerHTML = ok ? ":-)" : ":-(";	
+}
+
+function validate2() {
+	var ok = Time.validateMMSS(document.getElementById('time_mmss').value);
+	document.getElementById('time_mmss_result').innerHTML = ok ? ":-)" : ":-(";	
+}
+
+function validate3() {
+	var result = Time.convertSecondsToMMSS(document.getElementById('time_convert_mmss').value);
+	document.getElementById('time_convert_mmss_result').innerHTML = result == null ? "null" : result;
+}
+
+function validate4() {
+	var result =  Time.convertSecondsToHMMSS(document.getElementById('time_convert_hmmss').value);
+	document.getElementById('time_convert_hmmss_result').innerHTML = result == null ? "null" : result;
+}
+function validate5() {
+	var result =  Time.convertHMMSSToSeconds(document.getElementById('time_hmmss').value);
+	document.getElementById('time_hmmss_result').innerHTML = result == null ? "null" : result;	
+}
+
+function validate6() {
+	var result =  Time.convertMMSSToSeconds(document.getElementById('time_mmss').value);
+	document.getElementById('time_mmss_result').innerHTML = result == null ? "null" : result;	
+}
+
+function validate7() {
+	var ok = Time.validateDistance(document.getElementById('distance').value);
+	document.getElementById('distance_result').innerHTML = ok ? ":-)" : ":-(";	
+}
+
+function validate8() {
+	var distance = document.getElementById('distance').value;
+	var validDistance = Time.validateDistance(distance);
+	if(!validDistance) {
+		document.getElementById('pace_result').innerHTML = ":-(";	
+		return;
+	}
+	var timeMMSS = document.getElementById('time_mmss').value;
+	var timeSec = Time.convertMMSSToSeconds(timeMMSS);
+	if(timeSec == null) {
+		document.getElementById('pace_result').innerHTML = ":-(";	
+		return;
+	}
+	var result = Time.calculatePace(parseFloat(distance), timeSec)
+	document.getElementById('pace_result').innerHTML = result == null ? "null" : result + "(min/km)";	
+
+}
+
+function validate9() {
+	var data = document.getElementById('data');
+	if(data == null) {
+		return;
+	}
+	var dataAsJSONArray = eval(data.value);
+	SelectUtils.populateSelect('my_select',dataAsJSONArray);
+}
+
+function validate10() {
+	SelectUtils.resetSelect('my_select');
+}
+function validate11(value) {
+	SelectUtils.makeSelection('my_select',value);
+}
+
+function validate12() {
+	var value = SelectUtils.getSelectedValue('my_select');
+	document.getElementById('selected_value').innerHTML = value == null ? "null" : "Selected value is: " + value;	
+
+}
+
+
+
+
+
+
+</script>
+
+</head>
+<body>
+
+<h1>Time conversion and validation - Testing page</h1>
+
+<label for="time_hmmss">h:mm:ss Field</label>
+<input id="time_hmmss"></input>
+<button onclick="validate1();">Validate h:mm:ss</button> 
+<button onclick="validate5();">Convert to seconds</button> 
+
+<span id="time_hmmss_result"></span>
+
+</br>
+</br>
+
+<label for="time_mmss">mm:ss Field</label>
+<input style="background-color:yellow;" id="time_mmss"></input>
+<button onclick="validate2();">Validate mm:ss</button> 
+<button onclick="validate6();">Convert to seconds</button> 
+
+<span id="time_mmss_result"></span>
+
+
+</br>
+</br>
+
+<label for="time_convert_mmss">Field with seconds</label>
+<input id="time_convert_mmss"></input>
+<button onclick="validate3();">Convert to mm:ss</button> 
+<span id="time_convert_mmss_result"></span>
+
+
+</br>
+</br>
+
+<label for="time_convert_hmmss">Field with seconds</label>
+<input  id="time_convert_hmmss"></input>
+<button  onclick="validate4();">Convert to h:mm:ss</button> 
+<span id="time_convert_hmmss_result"></span>
+
+</br>
+</br>
+
+<label for="distance">Field with Distance [0 - 99.9]</label>
+<input style="background-color:yellow;" id="distance"></input>
+<button onclick="validate7();">Validate distance in range</button> 
+<span id="distance_result"></span>
+
+</br>
+</br>
+
+<button onclick="validate8();">Calculate pace based on yellow fields</button> 
+<span id="pace_result"></span>
+
+</br>
+</br>
+
+<fieldset>
+<legend>SelectUtils:</legend>
+
+<button onclick="validate9();">Populate the gray &lt;select&gt; with gray JSON</button> 
+<button onclick="validate10();">Clear the gray select values</button> 
+<button onclick="validate11('19');">Make 'Hello' Selected (using the value 19)</button> 
+<button onclick="validate12();">Get Selected</button> 
+
+
+<textarea id="data" style="background-color:#A8A8A8;" rows="4" cols="60">
+[{"label":"Hi","value":12},{"label":"Hello","value": 19},{"label":"Hola","value": 199}]
+</textarea>
+<select  id="my_select" style="background-color:#A8A8A8;"></select>
+<span id="selected_value"></span>
+
+</fieldset>
+
+
+
+</body>
+</html>

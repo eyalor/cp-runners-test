@@ -1,0 +1,172 @@
+<!DOCTYPE HTML>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+
+<html dir="rtl">
+<head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js" type="text/javascript"></script>
+<style>
+body, input
+{
+	color: #333333;
+	font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
+	font-size: 11px;
+	line-height: 1.28;
+}
+input[type="text"]
+{
+	border: 1px solid #e2e2e2;
+	border-radius:3px 3px 3px 3px;
+	padding-right: 1px;
+}
+.activity_section_error
+{
+	border-color: #6E6E6E !important;
+	background-color: #FFDFDF !important
+}
+#activity_section_header
+{
+	margin-bottom: 4px;
+}
+#activity_section_header span
+{
+	display: inline-block;
+}
+#activity_section_header_distance
+{
+	margin-right: 38px;
+}
+#activity_section_header_duration
+{
+	margin-right: 8px;
+	width: 77px;
+	text-align: center;
+}
+.activity_section
+{
+	margin-top: 2px;
+}
+.activity_section .activity_label
+{
+	width: 35px;
+	display: inline-block;
+}
+.distance_field
+{
+	width: 27px;
+	margin-left: 5px;
+}
+.duration_field
+{
+	width: 17px;
+	direction: rtl;
+}
+.duration_separator
+{
+	font-weight: bold;
+}
+</style>
+<script>
+function setFieldError(j_element, turnOn)
+{
+	if (turnOn)
+	{
+		j_element.addClass('activity_section_error');
+	}
+	else
+	{
+		j_element.removeClass('activity_section_error');
+	}
+}
+
+function validate(j_element)
+{
+	setFieldError(j_element, false);
+	
+	var value = j_element.val();
+	if (value == '0' || value == '00')
+	{
+		return true;
+	}
+	
+	var value = j_element.val();
+	
+	if (j_element.hasClass('distance_field'))
+	{
+		// distance field - positive float
+		if (parseFloat(value) != value || value < 0)
+		{
+			j_element.addClass('activity_section_error');
+			return false;
+		}
+	}
+	else if (j_element.hasClass('duration_field'))
+	{
+		// duration field - positive integer
+		if (parseInt(value) != value || value < 0)
+		{
+			j_element.addClass('activity_section_error');
+			return false;
+		}
+		
+		// for duration minutes / seconds need to be less than 60
+		if (!j_element.hasClass('hours') && value >= 60)
+		{
+			j_element.addClass('activity_section_error');
+			return false;
+		}
+	}
+}
+
+jQuery(document).ready(function()
+	{
+		var activitySectionInputs = jQuery('#activity_sections input[type=text]');
+		
+		activitySectionInputs.focus(function()
+			{
+				jQuery(this).select();
+				this.setSelectionRange(0, 9999);
+			});
+		activitySectionInputs.blur(function()
+			{
+				validate(jQuery(this))
+			});
+	});
+</script>
+</head>
+<body>
+	<div id="activity_sections">
+		<div id="activity_section_header">
+			<span id="activity_section_header_distance">מרחק</span>
+			<span id="activity_section_header_duration">זמן</span>
+		</div>
+		<div class="activity_section">
+			<span class="activity_label">חימום</span>
+			<input type="text" class="distance_field" id="warmup_distance" name="warmup_distance" value="0" tabindex="1">
+			<input type="text" class="duration_field" id="warmup_seconds" name="warmup_seconds" value="00" tabindex="4">
+			<span class="duration_separator">:</span>
+			<input type="text" class="duration_field" id="warmup_minutes" name="warmup_minutes" value="00" tabindex="3">
+			<span class="duration_separator">:</span>
+			<input type="text" class="duration_field hours" id="warmup_hours" name="warmup_hours" value="0" tabindex="2">
+		</div>
+		<div class="activity_section">
+			<span class="activity_label">תרגיל</span>
+			<input type="text" class="distance_field" id="activity_distance" name="activity_distance" value="0" tabindex="5">
+			<input type="text" class="duration_field" id="activity_seconds" name="activity_seconds" value="00" tabindex="8">
+			<span class="duration_separator">:</span>
+			<input type="text" class="duration_field" id="activity_minutes" name="activity_minutes" value="00" tabindex="7">
+			<span class="duration_separator">:</span>
+			<input type="text" class="duration_field hours" id="activity_hours" name="activity_hours" value="0" tabindex="6">
+		</div>
+		<div class="activity_section">
+			<span class="activity_label">שחרור</span>
+			<input type="text" class="distance_field" id="cooldown_distance" name="cooldown_distance" value="0" tabindex="9">
+			<input type="text" class="duration_field" id="cooldown_seconds" name="cooldown_seconds" value="00" tabindex="12">
+			<span class="duration_separator">:</span>
+			<input type="text" class="duration_field" id="cooldown_minutes" name="cooldown_minutes" value="00" tabindex="11">
+			<span class="duration_separator">:</span>
+			<input type="text" class="duration_field hours" id="cooldown_hours" name="cooldown_hours" value="0" tabindex="10">
+		</div>
+	</div>
+</body>
+</html>

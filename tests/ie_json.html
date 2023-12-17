@@ -1,0 +1,40 @@
+<html>
+<head>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+		<script src="http://json-sans-eval.googlecode.com/svn/trunk/src/json_sans_eval.js"></script> 
+		<script type='text/javascript'>
+		
+		$(document).ready(function() {
+			$.ajax({
+			url : '../php/get_users_ie.php',
+			dataType : 'text',
+			data : {
+			},
+			success : function(txt) {
+				var docStr = $.trim(txt);
+				$("#json").html("The incoming JSON:<br>" + docStr);
+				var doc = null;
+				try {
+					doc = JSON.parse(docStr);
+				} catch(err) {
+				   $("#err").html("The error: " + err.message);
+				   // lets try to parse with 'json-sans-eval' parser
+				   doc = jsonParse(docStr);
+				}
+				if (doc.status.ecode == 0) {
+					alert("Status: " + doc.status.emessage); 
+							
+				} else {
+					alert("Status: " + doc.status.emessage);
+				}
+			}
+		});
+		
+		});
+		</script>
+</head>
+<body>
+<div id="json"></div>
+<div id="err"></div>
+</body>
+</html>
