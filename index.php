@@ -7,7 +7,7 @@ require_once 'php/html_page_init.php';
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>רצי הבירה - יומן ריצה</title>
-    <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.5.1/build/cssreset/cssreset-min.css">
+    <link rel="stylesheet" type="text/css" href="https://yui-s.yahooapis.com/3.5.1/build/cssreset/cssreset-min.css">
     <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet"
           type="text/css"/>
     <link href='./css/fullcalendar.css?v=<?php echo CSS_VERSION;?>' rel='stylesheet' type='text/css'/>
